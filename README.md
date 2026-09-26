@@ -22,3 +22,4 @@ Execute o arquivo principal no terminal:
  
 ```bash
 python3 main.py
+```
