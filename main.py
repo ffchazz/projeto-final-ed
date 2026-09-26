@@ -1,5 +1,6 @@
 import atribuicoes_secretario as sec
 import atribuicoes_diretor as diretor
+import atribuicoes_assistente as assistente
  
  
 def menu_secretario():
@@ -109,15 +110,63 @@ def menu_diretor():
             break
  
  
+def menu_assistente():
+    print("\n---------------- Olá, Assistente! ----------------")
+    while True:
+        print("\nVocê deseja:")
+        print("(1) Ver a menor distância entre a cidade da escola e a cidade de uma pessoa.")
+        print("(2) Ver a menor distância da cidade da escola até a cidade da pessoa passando por uma cidade específica.")
+        print("(3) Ver dados da(s) pessoa(s) que mora(m) na cidade mais perto da cidade da escola (incluindo distância).")
+        print("(4) Finalizar execução.")
+ 
+        op = input("Digite sua opção: ").strip()
+ 
+        if op not in ["1", "2", "3", "4"]:
+            continue
+ 
+        if op == "1":
+            nome = input("Digite o nome da pessoa cuja cidade te interessa: ")
+            p, caminho, dist = assistente.menor_distancia_pessoa(nome)
+            if not p:
+                print("Pessoa não cadastrada ou lista de espera vazia. Tem certeza que o nome da pessoa está certo?")
+            else:
+                print(f"Nome: {p.nome} | Idade: {p.idade} | Telefone: {p.telefone} | Cidade: {p.cidade}")
+                print(f"Menor caminho = {caminho} com custo {dist}")
+ 
+        elif op == "2":
+            nome = input("Digite o nome da pessoa cuja cidade te interessa: ")
+            p, caminho, dist = assistente.menor_distancia_via_intermediaria(nome)
+            if not p:
+                print("Pessoa não cadastrada ou lista de espera vazia. Tem certeza que o nome da pessoa está certo?")
+            else:
+                print(f"Nome: {p.nome} | Idade: {p.idade} | Telefone: {p.telefone} | Cidade: {p.cidade}")
+                print(f"Menor caminho = {caminho} com custo {dist}")
+ 
+        elif op == "3":
+            cidade, dist, moradores = assistente.moradores_cidade_mais_proxima()
+            if not cidade:
+                print("Lista de espera vazia.")
+            else:
+                print(f"A cidade mais próxima à cidade da escola que tem moradores na lista de espera (ver abaixo) é {cidade}. Distância = {dist}")
+                for m in moradores:
+                    print(f"Nome: {m.nome} | Idade: {m.idade} | Telefone: {m.telefone} | Cidade: {m.cidade}")
+ 
+        elif op == "4":
+            break
+ 
+ 
 def main():
-    # 1. Etapa do Secretário (usa Lista Encadeada)
+    # 1. Secretário (Lista Encadeada)
     menu_secretario()
  
-    # Transição: alimenta a Árvore Binária com os nós da Lista Encadeada
+    # Transição: Lista Encadeada -> Árvore BST
     diretor.popular_arvore_da_lista(sec.get_lista())
  
-    # 2. Etapa do Diretor (usa Árvore Binária de Busca)
+    # 2. Diretor (Árvore Binária de Busca)
     menu_diretor()
+ 
+    # 3. Assistente (Grafo ponderado + Dijkstra)
+    menu_assistente()
  
  
 if __name__ == "__main__":
